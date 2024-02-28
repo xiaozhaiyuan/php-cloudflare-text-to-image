@@ -1,7 +1,7 @@
 # Usage
 You need to modify the $accountId and $apiToken in the image.php file. You can create it in the cloudflare background and modify the "xxx" in the code.
 
-How to use: Download the server in the PHP environment and open index.html, and you can create pictures according to the prompt words.
+How to use: Instructions for use: Open index.html in the PHP environment and enter the prompt text to create the image.
 
 ![20240228151330](/images/20240228151330.png)
 
