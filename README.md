@@ -5,7 +5,7 @@ How to use: Download the server in the PHP environment and open index.html, and 
 
 ![20240228151330](/images/20240228151330.png)
 
-Cloudflare:https://dash.cloudflare.com/
+Cloudflare：https://dash.cloudflare.com/
 
 # php-cloudflare-text-to-image
 Cloudflare Workers AI Text to Image PHP code Api and HTML.
