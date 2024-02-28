@@ -3,6 +3,8 @@ You need to modify the $accountId and $apiToken in the image.php file. You can c
 
 How to use: Download the server in the PHP environment and open index.html, and you can create pictures according to the prompt words.
 
+![20240228151330](/images/20240228151330.png)
+
 Cloudflare:https://dash.cloudflare.com/
 
 # php-cloudflare-text-to-image
