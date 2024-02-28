@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>图片生成预览</title>
+    <style>
+        #loader {
+            display: none;
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>图片生成与预览工具</h1>
+    <form id="imageForm">
+        <label for="prompt">请输入图片描述：</label>
+        <input type="text" id="prompt" name="prompt" required />
+        <button type="submit">生成图片</button>
+    </form>
+    <br>
+    <!-- 加载动画 -->
+    <div id="loader"></div>
+
+    <!-- 图片结果 -->
+    <div id="imageResult">
+        <img id="generatedImage" src="" alt="生成的图片将展示在这里" style="width:500px; display: none;"/>
+        <a id="generatedImagehref" herf="" target="_blank" style="display: none;">点击查看大图</a>
+    </div>
+
+    <script>
+        var imageForm = document.getElementById('imageForm');
+        var loader = document.getElementById('loader');
+        var generatedImage = document.getElementById('generatedImage');
+        var generatedImagehref = document.getElementById('generatedImagehref');
+
+        imageForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // 显示加载动画
+            loader.style.display = 'block';
+            // 隐藏上次的图片结果
+            generatedImage.style.display = 'none';
+            generatedImagehref.style.display = 'none';
+
+            var formData = new FormData(this);
+            fetch('image.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // 隐藏加载动画
+                loader.style.display = 'none';
+
+                if (data.status === 'success') {
+                    // 图片生成成功，设置图片src显示图片
+                    generatedImage.style.display = 'block';
+                    generatedImagehref.style.display = 'block';
+                    generatedImage.src = data.url;
+                    generatedImagehref.href = data.url;
+                    generatedImage.alt = '描述: ' + formData.get('prompt');
+                } else {
+                    // 图片生成失败
+                    alert('图片生成失败：' + data.message);
+                }
+            })
+            .catch(error => {
+                // 网络或其他错误
+                // 隐藏加载动画
+                loader.style.display = 'none';
+                alert('发生错误：' + error.message);
+            });
+        });
+    </script>
+</body>
+</html>
