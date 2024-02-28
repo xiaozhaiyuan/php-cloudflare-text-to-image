@@ -5,6 +5,7 @@ How to use: Download the server in the PHP environment and open index.html, and 
 
 ![20240228151330](/images/20240228151330.png)
 
+Test site：https://text-img.freetu.top/
 Cloudflare：https://dash.cloudflare.com/
 
 # php-cloudflare-text-to-image
