@@ -9,7 +9,7 @@ Test site：https://text-img.freetu.top/
 
 Cloudflare：https://dash.cloudflare.com/
 
-Cloudflare Workers AI docs：https://developers.cloudflare.com/workers-ai/models/text-to-image/
+Cloudflare Workers AI docs：[https://developers.cloudflare.com/workers-ai/models/text-to-image/](https://developers.cloudflare.com/workers-ai/models/#text-to-image)
 
 # php-cloudflare-text-to-image
 Cloudflare Workers AI Text to Image PHP code Api and HTML.
