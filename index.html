@@ -151,8 +151,8 @@
                 if (data.status === 'success') {
                     generatedImage.style.display = 'block';
                     generatedImagehref.style.display = 'block';
-                    generatedImage.src = 'https://text-img.freetu.top' + data.url;
-                    generatedImagehref.href = 'https://text-img.freetu.top' + data.url;
+                    generatedImage.src = window.location.protocol+'//'+ window.location.hostname + data.url;
+                    generatedImagehref.href = window.location.protocol+'//'+ window.location.hostname + data.url;
                     generatedImage.title = 'Prompt: ' + formData.get('prompt');
                 } else {
                     alert('Generated Image error：' + data.message);
