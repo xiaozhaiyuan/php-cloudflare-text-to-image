@@ -1,33 +1,32 @@
 <?php
+
+// If there is a cross-domain issue, please open it.
+
+//header('Access-Control-Allow-Origin: *');
+//header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+//header('Access-Control-Max-Age: 86400');
+//header('Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding');
+//if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+//    exit;
+//}
+
 /**
  * Generate Images
  * Developer：XiaoZhaiyuan
- * Url：https://github.com/xiaozhaiyuan/php-cloudflare-text-to-image
+ * Github：https://github.com/xiaozhaiyuan/php-cloudflare-text-to-image
  * @param $prompt
+ * @param $accountId
+ * @param $apiToken
+ * @param $models
  * @return array|string[]
  */
-function generateImage($prompt)
+function generateImage($prompt, $accountId, $apiToken, $models)
 {
-    // You cloudflare accountId ，If you are not sure, please refer to README.
-    $accountId = "xxx";
+    $numSteps = 20;
+    $apiUrl = "https://api.cloudflare.com/client/v4/accounts/{$accountId}/ai/run/@cf/{$models}";
+    $headers = ["Authorization: Bearer {$apiToken}", "Content-Type: application/json"];
 
-    // You cloudflare apiToken ，If you are not sure, please refer to README.
-    $apiToken = "xxx";
-
-    $numSteps = 20; // default 20
-
-    // Cloudflare Api url
-    $apiUrl = "https://api.cloudflare.com/client/v4/accounts/{$accountId}/ai/run/@cf/stabilityai/stable-diffusion-xl-base-1.0";
-
-    $headers = [
-        "Authorization: Bearer {$apiToken}",
-        "Content-Type: application/json"
-    ];
-
-    $jsonBody = json_encode([
-        'prompt' => $prompt,
-        'num_steps' => $numSteps
-    ]);
+    $jsonBody = json_encode(['prompt' => $prompt, 'num_steps' => $numSteps]);
 
     $ch = curl_init($apiUrl);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -44,7 +43,7 @@ function generateImage($prompt)
 
     if ($result !== false && $contentType === "image/png") {
         $imageName = uniqid('image_', true) . '.png';
-        $path = 'images/' . $imageName; // Make sure there is an 'images' folder in the root directory of the server and that it has write permissions
+        $path = 'images/' . $imageName;
         file_put_contents($path, $result);
 
         return ['status' => 'success', 'url' => '/' . $path];
@@ -55,10 +54,11 @@ function generateImage($prompt)
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prompt = isset($_POST['prompt']) ? $_POST['prompt'] : 'default prompt';
-
-    // Execute the function and encode the response as JSON
+    $accountId = isset($_POST['accountId']) ? $_POST['accountId'] : 'default accountId';
+    $apiToken = isset($_POST['apiToken']) ? $_POST['apiToken'] : 'default apiToken';
+    $models = isset($_POST['models']) ? $_POST['models'] : 'default models';
     header('Content-Type: application/json');
-    echo json_encode(generateImage($prompt));
+    echo json_encode(generateImage($prompt, $accountId, $apiToken, $models));
 } else {
     echo 'This page expects a POST request.';
 }
