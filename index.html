@@ -2,86 +2,167 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>图片生成预览</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare Ai Text To Image</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-section, .result-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            height: 460px;
+        }
+
+        .image-display {
+            background-color: #fafafa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #999;
+        }
+
+        .container {
+            background-color: transparent;
+        }
+
+        .btn-primary, .btn-secondary {
+            margin-right: 10px;
+        }
+
         #loader {
-            display: none;
             border: 5px solid #f3f3f3; /* Light grey */
             border-top: 5px solid #3498db; /* Blue */
             border-radius: 50%;
             width: 50px;
             height: 50px;
             animation: spin 2s linear infinite;
-            margin: 10px auto;
+            margin: 20px auto;
+            display: none;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>图片生成与预览工具</h1>
-    <form id="imageForm">
-        <label for="prompt">请输入图片描述：</label>
-        <input type="text" id="prompt" name="prompt" required />
-        <button type="submit">生成图片</button>
-    </form>
-    <br>
-    <!-- 加载动画 -->
-    <div id="loader"></div>
-
-    <!-- 图片结果 -->
-    <div id="imageResult">
-        <img id="generatedImage" src="" alt="生成的图片将展示在这里" style="width:500px; display: none;"/>
-        <a id="generatedImagehref" herf="" target="_blank" style="display: none;">点击查看大图</a>
+<div class="container">
+    <div class="row">
+        <div class="col-12" style="text-align:center;margin-bottom:32px;padding-top:10px;">
+            <h3>Cloudflare Text To Image</h3>
+        </div>
+        <!-- form -->
+        <div class="col-lg-6 mb-4">
+            <div class="form-section">
+                <h4>Configuration</h4>
+                <form id="imageForm">
+                    <!-- accountId -->
+                    <div class="form-group">
+                        <label for="accountId">Cloudflare AccountId <b style="color:red;">*</b></label>
+                        <input type="text" class="form-control" id="accountId" name="accountId" placeholder="AccountId" required>
+                    </div>
+                    <!-- apiToken -->
+                    <div class="form-group">
+                        <label for="apiToken">Cloudflare ApiToken  <b style="color:red;">*</b></label>
+                        <input type="text" class="form-control" id="apiToken" name="apiToken" placeholder="ApiToken" required>
+                    </div>
+                    <!-- Image Models -->
+                    <div class="form-group">
+                        <label for="models">Image Models</label>
+                        <select class="form-control" id="models" name="models">
+                            <option value="lykon/dreamshaper-8-lcm">(fast)dreamshaper-8-lcm</option>
+                            <option value="stabilityai/stable-diffusion-xl-base-1.0">(slow)stable-diffusion-xl-base-1.0</option>
+                            <option value="bytedance/stable-diffusion-xl-lightning">(fast)stable-diffusion-xl-lightning</option>
+                        </select>
+                    </div>
+                    <!-- Prompt -->
+                    <div class="form-group">
+                        <label for="prompt">Prompt <b style="color:red;">*</b></label>
+                        <input type="text" class="form-control" id="prompt" name="prompt" placeholder="Prompt" required>
+                    </div>
+                    <!-- button -->
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Create Now</button>
+                </form>
+            </div>
+        </div>
+        <!-- image-display -->
+        <div class="col-lg-6 mb-4">
+            <div class="result-section">
+                <h4>Image Preview</h4>
+                <div class="image-display">
+                    <!-- loading animation -->
+                    <div id="loader"></div>
+                    <img id="generatedImage" src="/images/loading.png" style="" width="300px">
+                </div>
+                <a href="" id="generatedImagehref" class="btn btn-primary" style="display:none;margin-top:20px;" target="_blank">Click for larger image</a>
+            </div>
+        </div>
     </div>
+    <div class="col-12" style="text-align:center;margin-top:26px;">
+        By XiaoZhaiyuan
+        <a href="https://github.com/xiaozhaiyuan/php-cloudflare-text-to-image" target="_blank">GitHub</a> & 
+        Workers AI <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare</a>
+    </div>
+</div>
 
-    <script>
-        var imageForm = document.getElementById('imageForm');
-        var loader = document.getElementById('loader');
-        var generatedImage = document.getElementById('generatedImage');
-        var generatedImagehref = document.getElementById('generatedImagehref');
+<!-- Bootstrap JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    var imageForm = document.getElementById('imageForm');
+    var loader = document.getElementById('loader');
+    var generatedImage = document.getElementById('generatedImage');
+    var generatedImagehref = document.getElementById('generatedImagehref');
 
-        imageForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // 显示加载动画
-            loader.style.display = 'block';
-            // 隐藏上次的图片结果
-            generatedImage.style.display = 'none';
-            generatedImagehref.style.display = 'none';
-
-            var formData = new FormData(this);
-            fetch('image.php', {
-                method: 'POST',
-                body: formData
-            })
+    imageForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        loader.style.display = 'block';
+        generatedImage.style.display = 'none';
+        generatedImagehref.style.display = 'none';
+        var formData = new FormData(this);
+        fetch('image.php', {
+            method: 'POST',
+            body: formData
+        })
             .then(response => response.json())
             .then(data => {
-                // 隐藏加载动画
                 loader.style.display = 'none';
-
                 if (data.status === 'success') {
-                    // 图片生成成功，设置图片src显示图片
                     generatedImage.style.display = 'block';
                     generatedImagehref.style.display = 'block';
-                    generatedImage.src = data.url;
-                    generatedImagehref.href = data.url;
-                    generatedImage.alt = '描述: ' + formData.get('prompt');
+                    generatedImage.src = 'https://text-img.freetu.top' + data.url;
+                    generatedImagehref.href = 'https://text-img.freetu.top' + data.url;
+                    generatedImage.title = 'Prompt: ' + formData.get('prompt');
                 } else {
-                    // 图片生成失败
-                    alert('图片生成失败：' + data.message);
+                    alert('Generated Image error：' + data.message);
                 }
             })
             .catch(error => {
-                // 网络或其他错误
-                // 隐藏加载动画
                 loader.style.display = 'none';
-                alert('发生错误：' + error.message);
+                alert('Error：' + error.message);
             });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
