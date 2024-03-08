@@ -3,7 +3,7 @@ You need to modify the $accountId and $apiToken in the image.php file. You can c
 
 How to use: Open index.html in the PHP environment and enter the prompt text to create the image.
 
-![20240228151330](/images/20240228151330.png)
+![120240307162110](/images/120240307162110.png)
 
 Test site：https://text-img.freetu.top/
 
